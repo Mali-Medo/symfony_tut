@@ -18,7 +18,7 @@
                         <div class="row">
                             <div class="q-display p-3">
                                 <i class="fa fa-quote-left mr-3"></i>
-                                <p class="d-inline">I've been turned into a cat, any thoughts on how to turn back? While I'm adorable, I don't really care for cat food.</p>
+                                <p class="d-inline">{{ blogText|raw }}</p>
                                 <p class="pt-4"><strong>--Tisha</strong></p>
                             </div>
                         </div>
@@ -38,7 +38,7 @@
                             <img src="{{ asset('images/icons/pngwing.com.png') }}" width="50" height="50" alt="Mallory Avatar">
                         </div>
                         <div class="mr-3 pt-2">
-                            {{ comment }}
+                            {{ comment|striptags|markdown }}
                             <p>-- Mallory</p>
                         </div>
                         <div class="vote-arrows flex-fill pt-2 js-vote-arrows" style="min-width: 90px;">
