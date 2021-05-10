@@ -8,6 +8,7 @@ use Knp\Bundle\MarkdownBundle\MarkdownParserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Cache\CacheInterface;
 use Twig\Environment;
 
 class BlogController extends AbstractController
@@ -31,7 +32,7 @@ class BlogController extends AbstractController
      * @param $slug
      * @return Response
      */
-    public  function show($slug, MarkdownParserInterface $markdownParser): Response
+    public  function show($slug, MarkdownParserInterface $markdownParser, CacheInterface $cache): Response
     {
         $comments = [
           'First `comment`',
@@ -39,8 +40,12 @@ class BlogController extends AbstractController
           'third comment',
         ];
 
-        $blogText = 'I\'ve been turned into a cat, any thoughts on how to turn back? While I\'m **adorable**, I don\'t really care for cat food.';
-        $parsedBlogText = $markdownParser->transformMarkdown($blogText);
+        $blogText = 'I\'ve been turned into a cat, any *thoughts* on how to turn back? While I\'m **adorable**, I don\'t really care for cat food.';
+
+        $parsedBlogText = $cache->get('markdown_'.md5($blogText), function () use ($blogText, $markdownParser) {
+            $parsedBlogText = $markdownParser->transformMarkdown($blogText);
+        });
+
 
         return $this->render('blog/show.html.twig', [
             'blog' => ucwords(str_replace('-', ' ', $slug)),
