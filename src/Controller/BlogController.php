@@ -46,7 +46,7 @@ class BlogController extends AbstractController
             $parsedBlogText = $markdownParser->transformMarkdown($blogText);
         });
 
-        dd($markdownParser);
+        dump($cache);
 
         return $this->render('blog/show.html.twig', [
             'blog' => ucwords(str_replace('-', ' ', $slug)),
