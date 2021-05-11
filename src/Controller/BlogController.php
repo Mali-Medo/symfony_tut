@@ -42,14 +42,11 @@ class BlogController extends AbstractController
      * @param $slug
      * @return Response
      */
-    public  function show($slug, MarkdownHelper $markdownHelper, HubInterface $sentryHub): Response
+    public  function show($slug, MarkdownHelper $markdownHelper): Response
     {
-        dump($sentryHub);
         if($this->isDebug){
             $this->logger->info('We are in debug mode');
         }
-
-        throw new \Exception('bad stuff happend!');
 
         $comments = [
           'First `comment`',
@@ -61,14 +58,10 @@ class BlogController extends AbstractController
 
         $parsedBlogText = $markdownHelper->parse($blogText);
 
-       // dump($cache);
-
         return $this->render('blog/show.html.twig', [
             'blog' => ucwords(str_replace('-', ' ', $slug)),
             'blogText' => $parsedBlogText,
             'comments' => $comments,
         ]);
-
-
     }
 }
