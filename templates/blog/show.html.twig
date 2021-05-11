@@ -38,7 +38,7 @@
                             <img src="{{ asset('images/icons/pngwing.com.png') }}" width="50" height="50" alt="Mallory Avatar">
                         </div>
                         <div class="mr-3 pt-2">
-                            {{ comment|striptags|markdown }}
+                            {{ comment|striptags|parse_markdown }}
                             <p>-- Mallory</p>
                         </div>
                         <div class="vote-arrows flex-fill pt-2 js-vote-arrows" style="min-width: 90px;">
