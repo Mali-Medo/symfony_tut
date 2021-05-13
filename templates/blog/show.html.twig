@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Blog: {{ blog }}{% endblock %}
+{% block title %}Blog: {{ blog.title }}{% endblock %}
 
 {% block body %}
     <div class="container">
@@ -13,13 +13,32 @@
                             <img class="center" src="{{ asset('images/icons/pngwing.com.png') }}" width="100" height="100" alt="Blog Image">
                         </div>
                         <div class="row">
-                            <h1 class="q-title-show">{{ blog }}</h1>
+                            <small>
+                                {% if blog.postedAt %}
+                                    Posted <br>
+                                    {{ blog.postedAt|ago }}
+                                {% else %}
+                                    (unpublished)
+                                {% endif %}
+                            </small>
+                        </div>
+                        <div class="row">
+                            <form action="{{ path('app_blog_vote', { slug: blog.slug }) }}" method="POST">
+                                <div class="vote-arrows flex-fill pt-2" style="min-width: 90px;">
+                                    <button class="vote-up btn btn-success" name="direction" value="up"><i class="far fa-arrow-alt-circle-up"></i></button>
+                                    <button class="vote-down btn btn-danger" name="direction" value="down"><i class="far fa-arrow-alt-circle-down"></i></button>
+                                    <span>{{ blog.votesString }}</span>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="row">
+                            <h1 class="q-title-show">{{ blog.title }}</h1>
                         </div>
                         <div class="row">
                             <div class="q-display p-3">
                                 <i class="fa fa-quote-left mr-3"></i>
-                                <p class="d-inline">{{ blogText|raw }}</p>
-                                <p class="pt-4"><strong>--Tisha</strong></p>
+                                <p class="d-inline">{{ blog.blogText|parse_markdown }}</p>
+                                <p class="pt-4"><strong>--Tisha</strong><span><img src="{{ asset('images/icons/pngwing.com.png') }}" width="50" height="50" alt="Tisha Avatar"></span></p>
                             </div>
                         </div>
                     </div>
@@ -42,8 +61,8 @@
                             <p>-- Mallory</p>
                         </div>
                         <div class="vote-arrows flex-fill pt-2 js-vote-arrows" style="min-width: 90px;">
-                            <a class="vote-up" href="#" data-direction="up"><i class="far fa-arrow-alt-circle-up"></i></a>
-                            <a class="vote-down" href="#" data-direction="down"><i class="far fa-arrow-alt-circle-down"></i></a>
+                            <button type="button" class="vote-up, btn btn-success" href="#" data-direction="up"><i class="far fa-arrow-alt-circle-up"></i></button>
+                            <button type="button" class="vote-down btn btn-danger" href="#" data-direction="down"><i class="far fa-arrow-alt-circle-down"></i></button>
                             <span>+ <span class="js-vote-total">6</span></span>
                         </div>
                     </div>
