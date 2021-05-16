@@ -46,7 +46,7 @@
                     </div>
                     <a class="answer-link" href="{{ path('app_blog_show', {slug: blog.slug}) }}">
                         <p class="q-display-response text-center p-3">
-                            <i class="fa fa-comment comment-lines"></i> 6 comments
+                            <i class="fa fa-comment comment-lines"></i> {{ blog.comments|length }}
                         </p>
                     </a>
                 </div>

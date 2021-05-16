@@ -3,7 +3,9 @@
 namespace App\Factory;
 
 use App\Entity\Blog;
+use App\Entity\Comment;
 use App\Repository\BlogRepository;
+use Symfony\Component\String\Slugger\AsciiSlugger;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -33,24 +35,21 @@ final class BlogFactory extends ModelFactory
         // TODO inject services if required (https://github.com/zenstruck/foundry#factories-as-services)
     }
 
+    public function notPosted():self
+    {
+        return $this->addState(['postedAt' => null]);
+    }
+
     protected function getDefaults(): array
     {
         return [
-            'title' => 'Missing pants',
-            'slug' => 'missing-pants-' . rand(0, 1000),
-            'description' => 'Does anyone have a spell to call your pants back?',
-            'blogText' => <<<EOF
-Hi! So... I'm having a *weird* day. Yesterday, I cast a spell to make
-my dishes wash themselves. But while I was casting it,
-I slipped a little and I think `I also hit my pants with the spell`.
-
-When I woke up this morning, I caught a quick glimpse of my pants
-opening the front door and walking out! I've been out all afternoon
-(with no pants mind you) searching for them.
-
-Does anyone have a spell to call your pants back?
-EOF,
-            'postedAt' => rand(1, 10) > 2 ? new \DateTime(sprintf('-%d days', rand(1, 100))) : null,
+            'title' => self::faker()->realText(50),
+            'description' => self::faker()->realTextBetween(20, 150),
+            'blogText' => self::faker()->paragraphs(
+                self::faker()->numberBetween(1, 4),
+                true
+            ),
+            'postedAt' => self::faker()->dateTimeBetween('-100 days', '-1 minute'),
             'votes' => rand(-20, 50),
         ];
     }
@@ -59,7 +58,7 @@ EOF,
     {
         // see https://github.com/zenstruck/foundry#initialization
         return $this
-            // ->afterInstantiate(function(Blog $blog) {})
+        //     ->afterInstantiate(function(Blog $blog)
         ;
     }
 

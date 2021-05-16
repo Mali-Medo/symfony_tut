@@ -3,13 +3,19 @@
 namespace App\Entity;
 
 use App\Repository\BlogRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Timestampable\Traits\TimestampableEntity;
 
 /**
  * @ORM\Entity(repositoryClass=BlogRepository::class)
  */
 class Blog
 {
+    use TimestampableEntity;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -24,6 +30,7 @@ class Blog
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Gedmo\Slug(fields={"title"})
      */
     private string $slug;
 
@@ -46,6 +53,16 @@ class Blog
      * @ORM\Column(type="integer")
      */
     private int $votes = 0;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="blog")
+     */
+    private Collection $comments;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -146,6 +163,36 @@ class Blog
     public function downVote(): self
     {
         $this->votes--;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setBlog($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getBlog() === $this) {
+                $comment->setBlog(null);
+            }
+        }
 
         return $this;
     }
