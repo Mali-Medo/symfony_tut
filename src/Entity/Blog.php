@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\BlogRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Timestampable\Traits\TimestampableEntity;
@@ -55,7 +56,8 @@ class Blog
     private int $votes = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="blog")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="blog", fetch="EXTRA_LAZY")
+     * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     private Collection $comments;
 
@@ -173,6 +175,25 @@ class Blog
     public function getComments(): Collection
     {
         return $this->comments;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getNonDeletedComments(): Collection
+    {
+        $criteria = BlogRepository::createNonDeletedCriteria();
+
+        return $this->comments->matching($criteria);
+        /*bad performance
+        $comments = [];
+        foreach ($this->getComments() as $comment){
+            if(!$comment->getIsDeleted()){
+                $comments [] = $comment;
+            }
+        }
+        return new ArrayCollection($comments);
+        */
     }
 
     public function addComment(Comment $comment): self

@@ -70,15 +70,8 @@ class BlogController extends AbstractController
 //            throw $this->createNotFoundException(sprintf('no blog post found for "%s"', $slug));
 //        }
 
-        $comments = [
-          'First `comment`',
-          'second comment',
-          'third comment',
-        ];
-
         return $this->render('blog/show.html.twig', [
             'blog' => $blog,
-            'comments' => $comments,
         ]);
     }
 

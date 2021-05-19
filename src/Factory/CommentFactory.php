@@ -38,6 +38,8 @@ final class CommentFactory extends ModelFactory
         return [
             'authorName' => self::faker()->name(null),
             'content' => self::faker()->realTextBetween(20, 150),
+            'createdAt' => self::faker()->dateTimeBetween('-100 days', '-1 minute'),
+            'isDeleted' => self::faker()->boolean(20),
         ];
     }
 
