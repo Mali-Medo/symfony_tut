@@ -4,8 +4,10 @@ namespace App\DataFixtures;
 
 use App\Factory\BlogFactory;
 use App\Factory\CommentFactory;
+use App\Factory\TagFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use function Zenstruck\Foundry\create_many;
 
 
 class AppFixtures extends Fixture
@@ -18,6 +20,13 @@ class AppFixtures extends Fixture
 //            ->notPosted()
 //            ->createMany(5)
 //        ;
-        BlogFactory::createMany(10, ['comments' => CommentFactory::new()->many(0, 15)]);
+        TagFactory::createMany(10);
+
+        BlogFactory::createMany(10, function(){
+            return [
+                'comments' => CommentFactory::new()->many(0, 15),
+                'tags' => TagFactory::randomRange(0,6),
+            ];
+        });
     }
 }

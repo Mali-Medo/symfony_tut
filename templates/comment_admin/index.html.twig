@@ -5,7 +5,17 @@
 {% block content_body %}
 
     <div class="row">
-        <h1>Manage comments</h1>
+        <h1>Manage comments ({{ pagination.getTotalItemCount }})</h1>
+        <form>
+            <div class="input-group mb-3">
+                <input type="text"
+                       name="q"
+                       class="form-control"
+                       placeholder="Search..."
+                       value="{{ app.request.query.get('q') }}"
+                >
+            </div>
+        </form>
     </div>
 
     <div class="col-sm-12">
@@ -19,7 +29,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for comment in comments %}
+                {% for comment in pagination %}
                     <tr>
                         <td>
                             <a href="{{ path('app_blog_show', {slug: comment.blog.slug}) }}">
@@ -36,9 +46,18 @@
                             {{ comment.createdAt|ago }}
                         </td>
                     </tr>
+                    {% else %}
+                        <tr>
+                            <td>
+                                <h1>No comments found!</h1>
+                            </td>
+                        </tr>
                 {% endfor %}
             </tbody>
         </table>
-    </div>
+        <div class="pagination-sm center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
 
+    </div>
 {% endblock %}

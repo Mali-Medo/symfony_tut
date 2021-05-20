@@ -40,6 +40,9 @@
                                     <i class="fa fa-quote-left mr-3"></i>
                                     <p class="d-inline">{{ blog.description|parse_markdown }}</p>
                                     <p class="pt-4"><strong>--Autor</strong></p>
+                                    {% for tag in blog.tags %}
+                                        <span class="badge rounded-pill bg-warning">{{ tag.name }}</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>

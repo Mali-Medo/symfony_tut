@@ -27,7 +27,11 @@ class BlogRepository extends ServiceEntityRepository
 
     public function findAllPostedOrderedByNewest(): array
     {
+        //b blogs
+        //t tags
         return $this->addIsPostedQueryBuilder()
+            ->leftJoin('b.tags', 't')
+            ->addSelect('t')
             ->orderBy('b.postedAt', 'DESC')
             ->getQuery()
             ->getResult()

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Comment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,6 +20,29 @@ class CommentRepository extends ServiceEntityRepository
         parent::__construct($registry, Comment::class);
     }
 
+    /**
+     * @param null|string $term
+     *
+     */
+    public function getWithSearchQueryBuilder(?string $term): QueryBuilder
+    {
+        //c = comment
+        //b = blog
+        $qb = $this->createQueryBuilder('c')
+                    ->innerJoin('c.blog', 'b')
+                    ->addSelect('b');
+        if($term){
+            $qb->andWhere('c.content LIKE :term OR c.authorName LIKE :term OR b.title LIKE :term')
+                ->setParameter('term', '%'.$term.'%')
+            ;
+        }
+
+        return $qb
+            ->orderBy('c.createdAt', 'DESC')
+            //->getQuery()
+            //->getResult()
+            ;
+    }
     // /**
     //  * @return Comment[] Returns an array of Comment objects
     //  */
