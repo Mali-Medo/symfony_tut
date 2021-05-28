@@ -33,6 +33,16 @@ class User implements UserInterface
      */
     private $firstName;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $blogUsername;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -86,7 +96,7 @@ class User implements UserInterface
      */
     public function getPassword(): ?string
     {
-        return null;
+        return $this->password;
     }
 
     /**
@@ -119,4 +129,35 @@ class User implements UserInterface
 
         return $this;
     }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    public function getBlogUsername(): ?string
+    {
+        return $this->blogUsername;
+    }
+
+    public function setBlogUsername(?string $blogUsername): self
+    {
+        $this->blogUsername = $blogUsername;
+
+        return $this;
+    }
+
+    public function getAvatarUrl(int $size = null): string
+    {
+        $url = 'https://robohash.org/'.$this->getEmail();
+
+        if($size){
+            $url .= sprintf('?size=%dx%d', $size, $size);
+        }
+
+        return $url;
+    }
+
 }

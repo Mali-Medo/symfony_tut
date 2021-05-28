@@ -9,6 +9,7 @@ use App\Factory\TagFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Generator;
 use function Zenstruck\Foundry\create_many;
 
 
@@ -32,5 +33,20 @@ class AppFixtures extends Fixture
         });
 
         UserFactory::createMany(10);
+        UserFactory::new()
+            ->withoutBlogUsername()
+            ->createMany(10)
+        ;
+
+        $c = 0;
+        UserFactory::new()
+            ->giveAdmin()
+            ->createMany(3, function () use (&$c) {
+                ++$c;
+                return [
+                    'email' => sprintf('admin%d@admin.com', $c),
+                ];
+            });
+
     }
 }

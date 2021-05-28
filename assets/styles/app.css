@@ -6,3 +6,9 @@
     margin-right: auto;
     width: 50%;
 }
+
+.nav-profile-img{
+    height: 100px;
+    width: 100px;
+    background-color: #5b4f69;
+}

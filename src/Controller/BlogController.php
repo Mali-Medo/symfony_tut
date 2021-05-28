@@ -10,6 +10,7 @@ use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sentry\State\HubInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,7 +44,8 @@ class BlogController extends AbstractController
     }
 
     /**
-     * @Route ("/blogs/new", name="app_new")
+     * @Route ("/admin/blogs/new", name="app_new")
+     * @IsGranted("ROLE_ADMIN_BLOG")
      */
     public function new(EntityManagerInterface $entityManager): Response
     {

@@ -4,6 +4,8 @@ namespace App\Factory;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Zenstruck\Foundry\RepositoryProxy;
 use Zenstruck\Foundry\ModelFactory;
 use Zenstruck\Foundry\Proxy;
@@ -26,11 +28,13 @@ use Zenstruck\Foundry\Proxy;
  */
 final class UserFactory extends ModelFactory
 {
-    public function __construct()
+    private UserPasswordEncoderInterface $passwordEncoder;
+
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
     {
         parent::__construct();
 
-        // TODO inject services if required (https://github.com/zenstruck/foundry#factories-as-services)
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     protected function getDefaults(): array
@@ -39,6 +43,8 @@ final class UserFactory extends ModelFactory
             'email' => self::faker()->email,
             'roles' => ['main_user'],
             'firstName' => self::faker()->firstName,
+            'password' => 'engage',
+            'blogUsername' => self::faker()->userName
         ];
     }
 
@@ -46,12 +52,32 @@ final class UserFactory extends ModelFactory
     {
         // see https://github.com/zenstruck/foundry#initialization
         return $this
-            // ->afterInstantiate(function(User $user) {})
-        ;
+             ->afterInstantiate(function(User $user) {
+                 $user->setPassword($this->passwordEncoder->encodePassword(
+                     $user,
+                     $user->getPassword()
+                 ));
+             });
     }
 
     protected static function getClass(): string
     {
         return User::class;
+    }
+
+    public function giveAdmin():self
+    {
+        return $this->addState([
+            'email' => '',
+            'roles' => ['ROLE_ADMIN'],
+            'password' => 'admin',
+            ]);
+    }
+
+    public function withoutBlogUsername():self
+    {
+        return $this->addState([
+           'blogUsername' => null,
+        ]);
     }
 }

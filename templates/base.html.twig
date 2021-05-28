@@ -10,10 +10,17 @@
                 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Spartan&display=swap">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
                 {{ encore_entry_link_tags('app') }}
-
             {% endblock %}
         </head>
         <body>
+            {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                <div class="alert alert-warning" style="margin-bottom: 0;">
+                    You are currently swiitched to this user.
+                    <a href="{{ path('app_homepage', {
+                        '_switch_user': '_exit'
+                    }) }}">Exit Impersonation</a>
+                </div>
+            {% endif %}
             <header>
                 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
                     <a class="navbar-brand"><img src="{{ asset('images/icons/pngwing.com.png') }}"></a>
@@ -23,6 +30,8 @@
 
                     <div id="navbarSupportedContent" class="collapse navbar-collapse">
                         <ul class="navbar-nav mr-auto">
+
+
                             <li class="nav-item active">
                                 <a class="nav-link" href="{{ path('app_homepage') }}">Home<span class="sr-only">(current)</span></a>
                             </li>
@@ -30,7 +39,24 @@
                                 <a class="nav-link" href="#">Blog</a>
                             </li>
                         </ul>
-                        <button type="button" class="btn btn-dark">Log in</button>
+                        {% if(is_granted('ROLE_USER')) %}
+                            <ul>
+                                <li class="nav-item dropdown" style="margin-right: 75px;">
+                                    <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <img class="nav-profile-img rounded-circle profile-image" src="{{ app.user.avatarUrl(100) }}">
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <a class="dropdown-item" href="{{ path('app_account') }}">Profile</a>
+                                        {% if is_granted('ROLE_ADMIN_ARTICLE') %}
+                                            <a class="dropdown-item" href="{{ path('app_new') }}">Create Post</a>
+                                        {% endif %}
+                                        <a class="dropdown-item" href="{{ path('app_logout') }}">Logout</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        {% else %}
+                            <a class="btn btn-dark" href="{{ path('app_login') }}" role="button">Log in</a>
+                        {% endif %}
                     </div>
                 </nav>
             </header>
