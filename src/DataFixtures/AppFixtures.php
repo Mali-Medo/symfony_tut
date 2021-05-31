@@ -2,16 +2,13 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
+use App\Factory\ApiTokenFactory;
 use App\Factory\BlogFactory;
 use App\Factory\CommentFactory;
 use App\Factory\TagFactory;
 use App\Factory\UserFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker\Generator;
-use function Zenstruck\Foundry\create_many;
-
 
 class AppFixtures extends Fixture
 {
@@ -32,11 +29,18 @@ class AppFixtures extends Fixture
             ];
         });
 
-        UserFactory::createMany(10);
+        UserFactory::createMany(10, function () {
+            return [
+                'apiTokens' => ApiTokenFactory::new()->many(1, 4),
+            ];
+        });
         UserFactory::new()
             ->withoutBlogUsername()
-            ->createMany(10)
-        ;
+            ->createMany(10, function () {
+                return [
+                    'apiTokens' => ApiTokenFactory::new()->many(1, 4),
+                ];
+            });
 
         $c = 0;
         UserFactory::new()
@@ -45,8 +49,8 @@ class AppFixtures extends Fixture
                 ++$c;
                 return [
                     'email' => sprintf('admin%d@admin.com', $c),
-                ];
+                    'apiTokens' => ApiTokenFactory::new()->many(1, 3),
+                    ];
             });
-
     }
 }

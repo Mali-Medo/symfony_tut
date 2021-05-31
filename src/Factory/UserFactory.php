@@ -2,8 +2,10 @@
 
 namespace App\Factory;
 
+use App\Entity\ApiToken;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Zenstruck\Foundry\RepositoryProxy;
@@ -44,7 +46,8 @@ final class UserFactory extends ModelFactory
             'roles' => ['main_user'],
             'firstName' => self::faker()->firstName,
             'password' => 'engage',
-            'blogUsername' => self::faker()->userName
+            'blogUsername' => self::faker()->userName,
+
         ];
     }
 
