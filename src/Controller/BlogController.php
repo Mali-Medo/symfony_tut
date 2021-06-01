@@ -96,4 +96,20 @@ class BlogController extends AbstractController
             'slug' => $blog->getSlug(),
         ]);
     }
+
+    /**
+     * @param Blog $blog
+     * @Route("/admin/blog/{id}/edit")
+     * @IsGranted("MANAGE", subject="blog")
+     */
+    public function edit(Blog $blog)
+    {
+        //shorter
+      //  $this->denyAccessUnlessGranted('MANAGE', $blog);
+//        if(!$this->isGranted('MANAGE', $blog)){
+//            throw $this->createAccessDeniedException('No access!');
+//        }
+
+        dd($blog);
+    }
 }

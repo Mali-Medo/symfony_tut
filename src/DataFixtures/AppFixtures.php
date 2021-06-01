@@ -22,13 +22,6 @@ class AppFixtures extends Fixture
 //        ;
         TagFactory::createMany(10);
 
-        BlogFactory::createMany(10, function(){
-            return [
-                'comments' => CommentFactory::new()->many(0, 15),
-                'tags' => TagFactory::randomRange(0,6),
-            ];
-        });
-
         UserFactory::createMany(10, function () {
             return [
                 'apiTokens' => ApiTokenFactory::new()->many(1, 4),
@@ -50,7 +43,15 @@ class AppFixtures extends Fixture
                 return [
                     'email' => sprintf('admin%d@admin.com', $c),
                     'apiTokens' => ApiTokenFactory::new()->many(1, 3),
-                    ];
+                ];
             });
+
+        BlogFactory::createMany(10, function(){
+            return [
+                'comments' => CommentFactory::new()->many(0, 15),
+                'tags' => TagFactory::randomRange(0,6),
+                'author' => UserFactory::random(),
+            ];
+        });
     }
 }
