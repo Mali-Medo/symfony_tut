@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Blog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -68,4 +70,35 @@ class BlogRepository extends ServiceEntityRepository
         ;
     }
     */
+
+    public function findAllOrderedDQL()
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.comments', 'c')
+            ->leftJoin('b.tags', 't')
+            ->addOrderBy('b.title', 'DESC')
+            ->getQuery()
+            ->execute();
+    }
+    public function getWithSearchDQL(?string $term)
+    {
+//        $query = $em->createQuery('SELECT b FROM App\Entity\Blog b
+//                                       LEFT JOIN b.comments c
+//                                       LEFT JOIN b.tags t
+//                                       LEFT JOIN b.author a
+//                                       WHERE b.title LIKE :term
+//                                       ');
+//        $query->setParameter('term', '%'.$term.'%');
+//        return $query->getResult(); // array of User objects
+
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.comments', 'c')
+            ->leftJoin('b.tags', 't')
+            ->leftJoin('b.author', 'a')
+            ->andWhere('b.title LIKE :term')
+            ->setParameter('term', '%'.$term.'%')
+            ->getQuery()
+            ->execute();
+
+    }
 }

@@ -56,18 +56,18 @@ class Blog
     private int $votes = 0;
 
     /**
-     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="blog", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="blog", fetch="EAGER")
      * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     private Collection $comments;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="blogs")
+     * @ORM\ManyToMany(targetEntity=Tag::class, inversedBy="blogs", fetch="EAGER")
      */
     private Collection $tags;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="blogs")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="blogs", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
      */
     private $author;

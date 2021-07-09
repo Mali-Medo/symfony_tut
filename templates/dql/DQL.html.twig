@@ -5,6 +5,21 @@
             <h1 class="display-4">Your DQL examples here</h1>
         </div>
     </div>
+
+    <div class="row">
+        <h1>Manage blogs ({{ "prebroji kolko ima" }})</h1>
+        <form>
+            <div class="input-group mb-3">
+                <input type="text"
+                       name="search"
+                       class="form-control"
+                       placeholder="Search..."
+                       value="{{ app.request.query.get('search') }}"
+                >
+            </div>
+        </form>
+    </div>
+
     <div class="container">
         <div class="row">
             {% for blog in blogs %}

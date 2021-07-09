@@ -5,6 +5,7 @@ namespace App\Controller;
 
 
 use App\Entity\Blog;
+use App\MessageHelperBundle\MessageHelper;
 use App\Repository\BlogRepository;
 use App\Service\MarkdownHelper;
 use Doctrine\ORM\EntityManager;
@@ -25,7 +26,6 @@ class BlogController extends AbstractController
     private $isDebug;
 
     public function __construct(LoggerInterface $logger, bool $isDebug){
-
         $this->logger = $logger;
         $this->isDebug = $isDebug;
     }
@@ -57,8 +57,11 @@ class BlogController extends AbstractController
      * @param $slug
      * @return Response
      */
-    public  function show(Blog $blog): Response
+    public  function show(Blog $blog, MessageHelper $messageHelper): Response
     {
+        $a = 'jel delas? ';
+        dd($messageHelper->generateMessage($a));
+
         if($this->isDebug){
             $this->logger->info('We are in debug mode');
         }

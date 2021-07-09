@@ -36,7 +36,7 @@
                                 <a class="nav-link" href="{{ path('app_homepage') }}">Home<span class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Blog</a>
+                                <a class="nav-link" href="{{ path('app_dql') }}">DQL</a>
                             </li>
                         </ul>
                         {% if(is_granted('ROLE_USER')) %}
