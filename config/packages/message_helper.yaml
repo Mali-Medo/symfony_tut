@@ -1,0 +1,4 @@
+message_helper:
+  min_sunshine: 5
+  unicorns_are_real: false
+  word_provider: App\Service\CustomWordProvider

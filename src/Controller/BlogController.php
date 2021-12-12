@@ -57,23 +57,21 @@ class BlogController extends AbstractController
      * @param $slug
      * @return Response
      */
-    public  function show(Blog $blog, MessageHelper $messageHelper): Response
+    public  function show(Blog $blog, MessageHelper $messageHelper, EntityManagerInterface $entityManager, $slug, MarkdownHelper $markdownHelper): Response
     {
-        $a = 'jel delas? ';
-        dd($messageHelper->generateMessage($a));
-
+        //dd($messageHelper->getWordList());
         if($this->isDebug){
             $this->logger->info('We are in debug mode');
         }
 
 //(add -> $slug, MarkdownHelper $markdownHelper, EntityManagerInterface $entityManager <- in param of show() if you uncomment)
-//        $repository = $entityManager->getRepository(Blog::class);
-//        /** @var Blog|null $blog */
-//        $blog = $repository->findOneBy(['slug' => $slug]);
-//
-//        if(!$blog){
-//            throw $this->createNotFoundException(sprintf('no blog post found for "%s"', $slug));
-//        }
+        $repository = $entityManager->getRepository(Blog::class);
+        /** @var Blog|null $blog */
+        $blog = $repository->findOneBy(['slug' => $slug]);
+
+        if(!$blog){
+            throw $this->createNotFoundException(sprintf('no blog post found for "%s"', $slug));
+        }
 
         return $this->render('blog/show.html.twig', [
             'blog' => $blog,
@@ -107,12 +105,9 @@ class BlogController extends AbstractController
      */
     public function edit(Blog $blog)
     {
-        //shorter
-      //  $this->denyAccessUnlessGranted('MANAGE', $blog);
-//        if(!$this->isGranted('MANAGE', $blog)){
-//            throw $this->createAccessDeniedException('No access!');
-//        }
-
-        dd($blog);
+        $this->denyAccessUnlessGranted('MANAGE', $blog);
+        if(!$this->isGranted('MANAGE', $blog)){
+            throw $this->createAccessDeniedException('No access!');
+        }
     }
 }
